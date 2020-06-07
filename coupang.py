@@ -48,9 +48,15 @@ class CoupangSpider(Spider):
         print(json.loads(response.body.decode())['data']['shortUrl'])
         _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}?itemId={response.meta['itemId']}&isAddedCart="
         print(_DETAIL_PAGE_URL)
-        # req =  Request(url=_DETAIL_PAGE_URL, meta={'dont_merge_cookies': True}, callback=self.parse_detail_info)
-
-
+        yield Request(url=_DETAIL_PAGE_URL, callback=self.parse_detail_info, headers= {
+            'User-Agent': 'PostmanRuntime/7.22.0',
+            'Accept': '*/*',
+            'Cache-Control': 'no-cache',
+            'Postman-Token': '1fd3873a-42b3-4ab3-9cda-3676b3611315',
+            'Host': 'www.coupang.com',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive'
+        })
 
     def parse_detail_info(self, response):
         print(response)
