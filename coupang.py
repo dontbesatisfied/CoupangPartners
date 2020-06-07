@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from scrapy import Spider
 from scrapy.http import Request, FormRequest
+from utils import parse_detail_content
 import constants
 import json
+
 
 class CoupangSpider(Spider):
     name = 'coupang'
     allowed_domains = ['partners.coupang.com', 'coupang.com']
-    # start_urls = ['http://partners.coupang.com/']
     start_urls = ['https://login.coupang.com/login/login.pang?rtnUrl=https%3A%2F%2Fpartners.coupang.com%2Fpostlogin%3Fs%3DpTdDpjtkcHvlTPyq2xuMHMUklbFezVrZ2_-2gFhjvikLvr_lWTl9sySXpBoQ3icEOO8dNLAB3_UpBtBQnPAi1cygYGZd-vfN1vPJonkWVG-hUz_dCDseUIOCZRD5zvkjv91J_T6Bb63cYciaOoeJiQ']
 
     def parse(self, response):
@@ -42,22 +43,18 @@ class CoupangSpider(Spider):
                 'title': i['title'],
                 'type': i['type'],
                 'vendorItemId': i['vendorItemId'],
-            }}), meta={'productId': i['productId'], 'itemId': i['itemId']},  callback=self.parse_short_url) for i in products]
+            }}), meta={'productId': i['productId'], 'itemId': i['itemId'], 'vendorItemId': i['vendorItemId']},  callback=self.parse_short_url) for i in products]
 
     def parse_short_url(self, response):
         print(json.loads(response.body.decode())['data']['shortUrl'])
-        _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}?itemId={response.meta['itemId']}&isAddedCart="
+        _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}/items/{response.meta['itemId']}/vendoritems/{response.meta['vendorItemId']}"
+        print(_DETAIL_PAGE_URL)
         yield Request(url=_DETAIL_PAGE_URL, callback=self.parse_detail_info, headers= {
             'User-Agent': 'PostmanRuntime/7.22.0',
-            'Accept': '*/*',
-            'Cache-Control': 'no-cache',
-            'Postman-Token': '1fd3873a-42b3-4ab3-9cda-3676b3611315',
-            'Host': 'www.coupang.com',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive'
         })
 
     def parse_detail_info(self, response):
-        print(response)
-
+        detail_items = json.loads(response.body.decode())['details']
+        # print(detail_items)
+        parse_detail_content(detail_items)
 

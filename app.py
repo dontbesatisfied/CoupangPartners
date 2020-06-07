@@ -5,11 +5,13 @@ from coupang import  CoupangSpider
 
 settings = Settings()
 settings.set('ROBOTSTXT_OBEY', False)
+
 settings.set('DEFAULT_REQUEST_HEADERS', {
     'Content-Type': 'application/json',
     'charset': 'UTF-8',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
+    'Accept': '*/*'
 })
+settings.set('USER_AGENT', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36')
 settings.set('COOKIES_DEBUG', True)
 settings.set('COOKIES_ENABLED', True)
 settings.set('DOWNLOAD_TIMEOUT', 30)
@@ -20,7 +22,7 @@ settings.set('ITEM_PIPELINES',
              )
 settings.set('DOWNLOADER_MIDDLEWARES', {
     # 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware':
-    'middleware.CoupangDownloaderMiddleware': 0
+    'middleware.CoupangDownloaderMiddleware': 1
 })
 process = CrawlerProcess(settings=settings)
 process.crawl(CoupangSpider)
