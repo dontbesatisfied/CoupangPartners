@@ -4,7 +4,6 @@ from scrapy.http import Request, FormRequest
 import constants
 import json
 
-
 class CoupangSpider(Spider):
     name = 'coupang'
     allowed_domains = ['partners.coupang.com', 'coupang.com']
@@ -49,7 +48,8 @@ class CoupangSpider(Spider):
         print(json.loads(response.body.decode())['data']['shortUrl'])
         _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}?itemId={response.meta['itemId']}&isAddedCart="
         print(_DETAIL_PAGE_URL)
-        # yield Request(url=_DETAIL_PAGE_URL, meta={'dont_merge_cookies': True}, callback=self.parse_detail_info)
+        # req =  Request(url=_DETAIL_PAGE_URL, meta={'dont_merge_cookies': True}, callback=self.parse_detail_info)
+
 
 
     def parse_detail_info(self, response):
