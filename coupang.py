@@ -47,7 +47,6 @@ class CoupangSpider(Spider):
     def parse_short_url(self, response):
         print(json.loads(response.body.decode())['data']['shortUrl'])
         _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}?itemId={response.meta['itemId']}&isAddedCart="
-        print(_DETAIL_PAGE_URL)
         yield Request(url=_DETAIL_PAGE_URL, callback=self.parse_detail_info, headers= {
             'User-Agent': 'PostmanRuntime/7.22.0',
             'Accept': '*/*',

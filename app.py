@@ -18,10 +18,10 @@ settings.set('ITEM_PIPELINES',
                  'pipelines.CrawlerPipeline': 300,
              }
              )
-# settings.set('DOWNLOADER_MIDDLEWARES', {
-#     # 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware':
-#     'middleware.CoupangDownloaderMiddleware': 0
-# })
+settings.set('DOWNLOADER_MIDDLEWARES', {
+    # 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware':
+    'middleware.CoupangDownloaderMiddleware': 0
+})
 process = CrawlerProcess(settings=settings)
 process.crawl(CoupangSpider)
 process.start()
