@@ -17,7 +17,7 @@ settings.set('COOKIES_ENABLED', True)
 settings.set('DOWNLOAD_TIMEOUT', 30)
 # 분당 50회의 요청을 넘어가면 24시간 제한
 # 3회 위반시 계정정지
-settings.set('DOWNLOAD_DELAY', 1.3)
+# settings.set('DOWNLOAD_DELAY', 1.3)
 settings.set('ITEM_PIPELINES',
              {
                  'pipelines.CrawlerPipeline': 300,
