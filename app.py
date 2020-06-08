@@ -1,7 +1,40 @@
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
+from twisted.internet import reactor, defer
 from scrapy.settings import Settings
 from coupang import CoupangSpider
 from naver import NaverSpider
+from scrapy.utils.log import configure_logging
+from selenium import webdriver
+import constants
+from time import sleep
+from utils import copy_input
+import os
+from multiprocessing import Pool
+
+
+def upload(x):
+    try:
+        driver = webdriver.Firefox(
+            executable_path=constants.GECKO_DRIVER_PATH)
+        driver.get(
+            'https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
+        sleep(1)
+
+        copy_input(driver, '//*[@id="id"]', constants.NAVER_ID)
+        copy_input(driver, '//*[@id="pw"]', constants.NAVER_PW)
+
+        driver.find_element_by_id('log.login').click()
+        sleep(2)
+
+        driver.get(f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
+        sleep(2)
+
+        driver.quit()
+    except Exception as e:
+        print(e)
+        driver.quit()
+
+
 
 settings = Settings()
 settings.set('ROBOTSTXT_OBEY', False)
@@ -27,7 +60,26 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
     # 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware':
     'middleware.CoupangDownloaderMiddleware': 1
 })
-process = CrawlerProcess(settings=settings)
 
-process.crawl(CoupangSpider)
-process.start()
+# process = CrawlerProcess(settings=settings)
+#
+# process.crawl(CoupangSpider)
+# process.start()
+
+pool = Pool(os.cpu_count())
+pool.map(upload, range(0, 2))
+
+
+# configure_logging({'LOG_FORMAT': '%(levelname)s: %(message)s'})
+# runner = CrawlerRunner(settings=settings)
+#
+#
+# @defer.inlineCallbacks
+# def crawl():
+#     yield runner.crawl(CoupangSpider)
+#     yield runner.crawl(NaverSpider)
+#     reactor.stop()
+#
+#
+# crawl()
+# reactor.run()

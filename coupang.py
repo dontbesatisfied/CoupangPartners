@@ -12,7 +12,6 @@ class CoupangSpider(Spider):
     start_urls = ['https://login.coupang.com/login/login.pang?rtnUrl=https%3A%2F%2Fpartners.coupang.com%2Fpostlogin%3Fs%3DpTdDpjtkcHvlTPyq2xuMHMUklbFezVrZ2_-2gFhjvikLvr_lWTl9sySXpBoQ3icEOO8dNLAB3_UpBtBQnPAi1cygYGZd-vfN1vPJonkWVG-hUz_dCDseUIOCZRD5zvkjv91J_T6Bb63cYciaOoeJiQ']
 
     def parse(self, response):
-
         _LOGIN_URL = 'https://login.coupang.com/login/loginProcess.pang'
 
         yield FormRequest(url=_LOGIN_URL, formdata={
