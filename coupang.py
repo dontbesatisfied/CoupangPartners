@@ -26,7 +26,7 @@ class CoupangSpider(Spider):
         yield Request(url=_SEARCH_ENDPOINT, method='POST', body=json.dumps({
             "filter": "물",
             "deliveryTypes": [],
-            "page": {"pageNumber": 0, "size": 2}
+            "page": {"pageNumber": 0, "size": 100}
         }), callback=self.parse_products)
 
     def parse_products(self, response):
@@ -43,18 +43,15 @@ class CoupangSpider(Spider):
                 'title': i['title'],
                 'type': i['type'],
                 'vendorItemId': i['vendorItemId'],
-            }}), meta={'productId': i['productId'], 'itemId': i['itemId'], 'vendorItemId': i['vendorItemId']},  callback=self.parse_short_url) for i in products]
+                }}), meta={'productId': i['productId'], 'itemId': i['itemId'], 'vendorItemId': i['vendorItemId']},  callback=self.parse_short_url) for i in products]
 
     def parse_short_url(self, response):
-        print(json.loads(response.body.decode())['data']['shortUrl'])
         _DETAIL_PAGE_URL = f"https://www.coupang.com/vp/products/{response.meta['productId']}/items/{response.meta['itemId']}/vendoritems/{response.meta['vendorItemId']}"
         print(_DETAIL_PAGE_URL)
-        yield Request(url=_DETAIL_PAGE_URL, callback=self.parse_detail_info, headers= {
+        yield Request(url=_DETAIL_PAGE_URL, callback=self.parse_detail_info, headers={
             'User-Agent': 'PostmanRuntime/7.22.0',
-        })
+        }, meta={'shortUrl': json.loads(response.body.decode())['data']['shortUrl']})
 
     def parse_detail_info(self, response):
         detail_items = json.loads(response.body.decode())['details']
-        # print(detail_items)
-        parse_detail_content(detail_items)
-
+        i = parse_detail_content(detail_items)
