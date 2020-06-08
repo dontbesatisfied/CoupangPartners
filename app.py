@@ -30,3 +30,4 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
 process = CrawlerProcess(settings=settings)
 process.crawl(CoupangSpider)
 process.start()
+
