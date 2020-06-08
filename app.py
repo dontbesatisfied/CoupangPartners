@@ -1,7 +1,7 @@
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
-from crawler import CrawlerSpider
 from coupang import CoupangSpider
+from naver import NaverSpider
 
 settings = Settings()
 settings.set('ROBOTSTXT_OBEY', False)
@@ -28,6 +28,6 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
     'middleware.CoupangDownloaderMiddleware': 1
 })
 process = CrawlerProcess(settings=settings)
+
 process.crawl(CoupangSpider)
 process.start()
-
