@@ -2,6 +2,7 @@
 from scrapy import Spider
 from scrapy.http import Request, FormRequest
 from utils import parse_detail_content
+from items import CoupangItem
 import constants
 import json
 
@@ -25,7 +26,7 @@ class CoupangSpider(Spider):
         yield Request(url=_SEARCH_ENDPOINT, method='POST', body=json.dumps({
             "filter": "물",
             "deliveryTypes": [],
-            "page": {"pageNumber": 0, "size": 2}
+            "page": {"pageNumber": 0, "size": 5}
         }), callback=self.parse_products)
 
     def parse_products(self, response):
@@ -57,10 +58,18 @@ class CoupangSpider(Spider):
     def parse_detail_info(self, response):
         detail_items = json.loads(response.body.decode())['details']
         contents = parse_detail_content(detail_items)
-        yield {
-            'title': response.meta['title'],
-            'image': response.meta['image'],
-            'salesPrice': response.meta['salesPrice'],
-            'shortUrl': response.meta['shortUrl'],
-            'contents': contents,
-        }
+
+        item = CoupangItem()
+        item['title'] = response.meta['title']
+        item['image'] = response.meta['image']
+        item['salesPrice'] = response.meta['salesPrice']
+        item['shortUrl'] = response.meta['shortUrl']
+        item['contents'] = contents
+        return item
+        # yield {
+        #     'title': response.meta['title'],
+        #     'image': response.meta['image'],
+        #     'salesPrice': response.meta['salesPrice'],
+        #     'shortUrl': response.meta['shortUrl'],
+        #     'contents': contents,
+        # }

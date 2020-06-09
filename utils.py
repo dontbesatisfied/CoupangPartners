@@ -5,8 +5,13 @@ import pyperclip
 from time import sleep
 
 
-# 클립보드에 input을 복사한 뒤
-# 해당 내용을 actionChain을 이용해 로그인 폼에 붙여넣기
+def read_file(filename):
+    with open('result.txt') as f:
+        content = f.readlines()
+    # you may also want to remove whitespace characters like `\n` at the end of each line
+    return [x.strip() for x in content]
+
+
 def copy_input(driver, xpath, input):
     pyperclip.copy(input)
     driver.find_element_by_xpath(xpath).click()

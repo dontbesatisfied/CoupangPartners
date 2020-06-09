@@ -1,5 +1,5 @@
 constants.py
 __pycache__/
-result.json
+result.*
 .vscode/
 *.log

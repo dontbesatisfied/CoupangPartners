@@ -24,20 +24,26 @@ class NaverSpider(Spider):
             'https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
         sleep(1)
 
-        copy_input(self, '//*[@id="id"]', constants.NAVER_ID)
-        copy_input(self, '//*[@id="pw"]', constants.NAVER_PW)
+        copy_input(self.driver, '//*[@id="id"]', constants.NAVER_ID)
+        copy_input(self.driver, '//*[@id="pw"]', constants.NAVER_PW)
 
         self.driver.find_element_by_id('log.login').click()
         sleep(2)
 
-        self.driver.get(f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
-        sleep(2)
+        self.driver.get(
+            f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
 
-        yield Request(url=f'https://blog.naver.com/{constants.NAVER_ID}', callback=self.parse)
+        scr = self.driver.find_element_by_tag_name('script')
+        print(scr, '@@@' * 10)
+
+        # yield Request(url=f'https://blog.naver.com/{constants.NAVER_ID}/postwrite', callback=self.parse, cookies=self.driver.get_cookies())
+
+        # yield Request(url=f'https://platform.editor.naver.com/api/blogpc001/v1/photo-uploader/session-key?userId={constants.NAVER_ID}', callback=self.parse, cookies=self.driver.get_cookies())
+        yield Request(url='https://platform.editor.naver.com/api/blogpc001/v1/service_config', callback=self.parse, cookies=self.driver.get_cookies())
 
     def parse(self, response):
+        print(response.body)
         pass
 
     def close(self):
         self.driver.quit()
-
