@@ -27,30 +27,25 @@ def post(craweld_txt_data):
         copy_input(driver, '//*[@id="pw"]', constants.NAVER_PW)
 
         driver.find_element_by_id('log.login').click()
-        driver.implicitly_wait(2)
+        driver.implicitly_wait(20)
 
         driver.get(
-            f'https://blog.naver.com/{constants.NAVER_ID}?Redirect=Write')
-        driver.implicitly_wait(2)
+            f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
+        driver.implicitly_wait(20)
 
-        # 블로그 작업공간이 iframe
-        driver.switch_to.frame('mainFrame')
-        # 클릭을 하지 않으면 input type=file이 안생김
-        image_btn = driver.find_element_by_xpath(
-            '/html/body/div[1]/div/div[2]/div[2]/div/div[1]/div/header/div[1]/ul/li[1]/button')
-        driver.execute_script('arguments[0].click();', image_btn)
-
+        # 사진 업로드 버튼 클릭
+        driver.execute_script('arguments[0].click();', driver.find_element_by_xpath('//button[@data-log="dot.img"]'))
 
         # 이미지 요청 및 다운로드
-        urlretrieve(crawler_data['image'], "image.png")
+        urlretrieve(crawler_data['image'], "./images/image.png")
         driver.find_element_by_css_selector(
-            "input[type='file']").send_keys(os.getcwd()+'/image.png')
-
+            "input[type='file']").send_keys(os.getcwd()+'/images/image.png')
+        #
         # for (idx, content_image) in enumerate(crawler_data['contents']):
         #     # 컨텐츠 이미지 요청 및 다운로드
-        #     urlretrieve(content_image, f"{idx}.png")
+        #     urlretrieve(content_image, f"./images/content_{idx}.png")
         #     driver.find_element_by_css_selector(
-        #         "input[type='file']").send_keys(os.getcwd() + f'/{idx}.png')
+        #         "input[type='file']").send_keys(os.getcwd() + f'/images/content_{idx}.png')
 
         # image_elements = driver.find_elements_by_class_name('se-image-resource')
         # for image_element in image_elements:
@@ -98,13 +93,8 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
 # process.crawl(CoupangSpider)
 # process.start()
 
-result = read_file('results.txt')
+result = read_file('result.txt')
 post(result[0])
-
-# res = requests.get(json.loads(result[0])['image'], headers={
-#                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'})
-# img = Image.open(BytesIO(res.content))
-# print(img)
 
 # pool = Pool(1) #os.cpu_count()
 # pool.map(post, result)

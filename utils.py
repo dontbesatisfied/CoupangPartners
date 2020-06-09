@@ -6,7 +6,7 @@ from time import sleep
 
 
 def read_file(filename):
-    with open('result.txt') as f:
+    with open(filename) as f:
         content = f.readlines()
     # you may also want to remove whitespace characters like `\n` at the end of each line
     return [x.strip() for x in content]
@@ -41,7 +41,7 @@ def parse_detail_content(details=list):
         for vendorItemContentDescription in detail['vendorItemContentDescriptions']:
             if vendorItemContentDescription['imageType']:
                 contents.append(
-                    'https://' + vendorItemContentDescription['content'])
+                    'https:' + vendorItemContentDescription['content'])
             else:
                 s = Selector(text=vendorItemContentDescription['content'])
                 contents = s.xpath('//img/@src').extract()
