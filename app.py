@@ -4,19 +4,18 @@ from coupang import CoupangSpider
 from naver import NaverSpider
 from selenium import webdriver
 import constants
-from time import sleep
 from utils import copy_input, read_file
 import os
 from multiprocessing import Pool
-import requests
-from PIL import Image
-from io import BytesIO
 import json
+from time import sleep
+from urllib.request import urlretrieve
 
 
 def post(craweld_txt_data):
     try:
         crawler_data = json.loads(craweld_txt_data)
+
         driver = webdriver.Firefox(
             executable_path=constants.GECKO_DRIVER_PATH)
 
@@ -41,30 +40,33 @@ def post(craweld_txt_data):
             '/html/body/div[1]/div/div[2]/div[2]/div/div[1]/div/header/div[1]/ul/li[1]/button')
         driver.execute_script('arguments[0].click();', image_btn)
 
-        driver.find_element_by_css_selector(
-            "input[type='file']").send_keys(os.getcwd()+'test.png')
-        # driver.switchTo().defaultContent();
-        sleep(5)
 
-        driver.quit()
+        # 이미지 요청 및 다운로드
+        urlretrieve(crawler_data['image'], "image.png")
+        driver.find_element_by_css_selector(
+            "input[type='file']").send_keys(os.getcwd()+'/image.png')
+
+        # for (idx, content_image) in enumerate(crawler_data['contents']):
+        #     # 컨텐츠 이미지 요청 및 다운로드
+        #     urlretrieve(content_image, f"{idx}.png")
+        #     driver.find_element_by_css_selector(
+        #         "input[type='file']").send_keys(os.getcwd() + f'/{idx}.png')
+
+        # image_elements = driver.find_elements_by_class_name('se-image-resource')
+        # for image_element in image_elements:
+        #     alt = image_element.get_attribute('alt')
+        #      #.find_element_by_xpath('..').click()
+        #     driver.execute_script("arguments[0].click();", driver.find_element_by_xpath(f'//img[@alt="{alt}"]').find_element_by_xpath('..'))
+        #     # print(alt, driver.find_element_by_class_name('se-object-arrangement-fit'))
+        #     # driver.execute_script("arguments[0].setAttribute('width', '693')", image_element)
+
+
+
+        # driver.quit()
+
     except Exception as e:
         print('Error : ', e)
         driver.quit()
-
-
-def upload_photo(cookies):
-    requests.get(
-        f'https://platform.editor.naver.com/api/blogpc001/v1/photo-uploader/session-key?userId={constants.NAVER_ID}',
-        headers={
-            'Accept': 'application/json',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Accept-Language': 'en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7',
-            'Host': 'platform.editor.naver.com',
-            'Origin': 'https://blog.naver.com',
-            'Referer': f'https://blog.naver.com/{constants.NAVER_ID}/postwrite',
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
-        })
-    pass
 
 
 settings = Settings()
@@ -92,7 +94,7 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
 })
 
 # process = CrawlerProcess(settings=settings)
-
+#
 # process.crawl(CoupangSpider)
 # process.start()
 
