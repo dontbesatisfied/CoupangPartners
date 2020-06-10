@@ -4,7 +4,7 @@ from coupang import CoupangSpider
 from naver import NaverSpider
 from selenium import webdriver
 import constants
-from utils import copy_input, read_file
+from utils import copy_input, read_file, merge_images
 import os
 from multiprocessing import Pool
 import json
@@ -18,44 +18,31 @@ def post(craweld_txt_data):
 
         driver = webdriver.Firefox(
             executable_path=constants.GECKO_DRIVER_PATH)
+        driver.implicitly_wait(20)
 
         driver.get(
             'https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com')
-        driver.implicitly_wait(1)
 
         copy_input(driver, '//*[@id="id"]', constants.NAVER_ID)
         copy_input(driver, '//*[@id="pw"]', constants.NAVER_PW)
 
         driver.find_element_by_id('log.login').click()
-        driver.implicitly_wait(20)
 
         driver.get(
             f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
-        driver.implicitly_wait(20)
 
         # 사진 업로드 버튼 클릭
-        driver.execute_script('arguments[0].click();', driver.find_element_by_xpath('//button[@data-log="dot.img"]'))
+        driver.execute_script('arguments[0].click();', driver.find_element_by_xpath(
+            '//button[@data-log="dot.img"]'))
 
         # 이미지 요청 및 다운로드
         urlretrieve(crawler_data['image'], "./images/image.png")
+        # 컨텐츠 이미지 요청 및 다운로드
+        for (idx, content_image) in enumerate(crawler_data['contents']):
+            urlretrieve(content_image, f"./images/content_{idx}.png")
+        merged_image_path = merge_images(os.getcwd()+'/images')
         driver.find_element_by_css_selector(
-            "input[type='file']").send_keys(os.getcwd()+'/images/image.png')
-        #
-        # for (idx, content_image) in enumerate(crawler_data['contents']):
-        #     # 컨텐츠 이미지 요청 및 다운로드
-        #     urlretrieve(content_image, f"./images/content_{idx}.png")
-        #     driver.find_element_by_css_selector(
-        #         "input[type='file']").send_keys(os.getcwd() + f'/images/content_{idx}.png')
-
-        # image_elements = driver.find_elements_by_class_name('se-image-resource')
-        # for image_element in image_elements:
-        #     alt = image_element.get_attribute('alt')
-        #      #.find_element_by_xpath('..').click()
-        #     driver.execute_script("arguments[0].click();", driver.find_element_by_xpath(f'//img[@alt="{alt}"]').find_element_by_xpath('..'))
-        #     # print(alt, driver.find_element_by_class_name('se-object-arrangement-fit'))
-        #     # driver.execute_script("arguments[0].setAttribute('width', '693')", image_element)
-
-
+            "input[type='file']").send_keys(merged_image_path)
 
         # driver.quit()
 
@@ -89,7 +76,7 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
 })
 
 # process = CrawlerProcess(settings=settings)
-#
+
 # process.crawl(CoupangSpider)
 # process.start()
 
