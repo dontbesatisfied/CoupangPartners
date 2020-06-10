@@ -10,7 +10,7 @@ from multiprocessing import Pool
 import json
 from time import sleep
 from urllib.request import urlretrieve
-
+from selenium.webdriver.common.action_chains import ActionChains
 
 def post(craweld_txt_data):
     try:
@@ -31,6 +31,8 @@ def post(craweld_txt_data):
         driver.get(
             f'https://blog.naver.com/{constants.NAVER_ID}/postwrite')
 
+        ActionChains(driver).send_keys(f'{crawler_data["title"]}')
+
         # 사진 업로드 버튼 클릭
         driver.execute_script('arguments[0].click();', driver.find_element_by_xpath(
             '//button[@data-log="dot.img"]'))
@@ -40,6 +42,7 @@ def post(craweld_txt_data):
         # 컨텐츠 이미지 요청 및 다운로드
         for (idx, content_image) in enumerate(crawler_data['contents']):
             urlretrieve(content_image, f"./images/content_{idx}.png")
+        # 다운받은 이미지 전부 하나의 사진으로 병
         merged_image_path = merge_images(os.getcwd()+'/images')
         driver.find_element_by_css_selector(
             "input[type='file']").send_keys(merged_image_path)
