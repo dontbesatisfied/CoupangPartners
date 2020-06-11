@@ -12,6 +12,7 @@ from time import sleep
 from urllib.request import urlretrieve
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 def post(craweld_txt_data):
     try:
         crawler_data = json.loads(craweld_txt_data)
@@ -78,13 +79,14 @@ settings.set('DOWNLOADER_MIDDLEWARES', {
     'middleware.CoupangDownloaderMiddleware': 1
 })
 
-# process = CrawlerProcess(settings=settings)
+process = CrawlerProcess(settings=settings)
 
+process.crawl(NaverSpider)
 # process.crawl(CoupangSpider)
-# process.start()
+process.start()
 
-result = read_file('result.txt')
-post(result[0])
+# result = read_file('result.txt')
+# post(result[0])
 
 # pool = Pool(1) #os.cpu_count()
 # pool.map(post, result)
