@@ -182,7 +182,7 @@ class NaverSpider(Spider):
                     "outSideAllowYn": True,
                     "cclYn": False
                 },
-                "editorSource": "L9Lb8aLgQSlvHoW/j+ORoA==",
+                # "editorSource": "L9Lb8aLgQSlvHoW/j+ORoA==",
                 "populationMeta": {
                     "mrBlogTalkCode": None,
                     "bookThemeInfoPk": None,
