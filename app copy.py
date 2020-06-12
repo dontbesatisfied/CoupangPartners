@@ -43,7 +43,7 @@ def post(craweld_txt_data):
         # 컨텐츠 이미지 요청 및 다운로드
         for (idx, content_image) in enumerate(crawler_data['contents']):
             urlretrieve(content_image, f"./images/content_{idx}.png")
-        # 다운받은 이미지 전부 하나의 사진으로 병
+        # 다운받은 이미지 전부 하나의 사진으로 병합
         merged_image_path = merge_images(os.getcwd()+'/images')
         driver.find_element_by_css_selector(
             "input[type='file']").send_keys(merged_image_path)

@@ -8,8 +8,8 @@ from PIL import Image
 from os import path, getcwd
 
 
-def merge_images(folder_dir):
-    files = sorted(glob(folder_dir + '/content_*.*'), key=path.getmtime)
+def merge_images(folder_dir, image_name):
+    files = sorted(glob(folder_dir + '/{image_name}'), key=path.getmtime)
     resized_xy = []
     resized_list = []
     max_y = 0

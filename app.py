@@ -2,7 +2,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from coupang import CoupangSpider
 import constants
-from utils import copy_input, read_file, merge_images
+from utils import copy_input, read_file
 import os
 import json
 

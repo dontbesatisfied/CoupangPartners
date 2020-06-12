@@ -1,6 +1,6 @@
 constants.py
 __pycache__/
-result.*
+*.txt
 .vscode/
 *.log
 images/

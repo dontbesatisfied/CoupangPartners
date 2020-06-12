@@ -6,16 +6,18 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import json
 import constants
+import time
 
 
 class CrawlerPipeline:
     def open_spider(self, spider):
-        self.file = open(constants.COUPANG_RESULT_DIR+'/result.txt', 'w')
+        self.file = open(constants.COUPANG_RESULT_DIR +
+                         '/{}.txt'.format(time.ctime().replace(' ', '')), 'w', encoding='utf-8')
 
     def close_spider(self, spider):
         self.file.close()
 
     def process_item(self, item, spider):
-        line = json.dumps(dict(item)) + "\n"
+        line = json.dumps(dict(item), ensure_ascii=False) + "\n"
         self.file.write(line)
         return item

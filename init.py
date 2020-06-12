@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QComboBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QFileDialog, QComboBox, QLineEdit
 from PyQt5 import uic
 import constants
 import app as crawler
@@ -19,6 +19,7 @@ class WindowClass(QMainWindow, form_class):
         super().__init__()
         self.setupUi(self)
 
+        self.coupang_pw_edit.setEchoMode(QLineEdit.Password)
         self.dir_edit.setText(os.getcwd())
         self.categories.addItems(
             [category["name"] for category in constants.COUPANG_SEARCH_CATEGORIES])
