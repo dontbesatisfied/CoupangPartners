@@ -5,11 +5,12 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import json
+import constants
 
 
 class CrawlerPipeline:
     def open_spider(self, spider):
-        self.file = open('result.txt', 'w')
+        self.file = open(constants.COUPANG_RESULT_DIR+'/result.txt', 'w')
 
     def close_spider(self, spider):
         self.file.close()

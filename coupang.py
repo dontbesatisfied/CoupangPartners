@@ -24,9 +24,10 @@ class CoupangSpider(Spider):
         print(response.body.decode())
         _SEARCH_ENDPOINT = "https://partners.coupang.com/api/v1/search"
         yield Request(url=_SEARCH_ENDPOINT, method='POST', body=json.dumps({
-            "filter": "물",
+            "categoryId": constants.COUPANG_SEARCH_CATEGORYID,
+            "filter": constants.COUPANG_SEARCH_WORD,
             "deliveryTypes": [],
-            "page": {"pageNumber": 0, "size": 5}
+            "page": {"pageNumber": 0, "size": constants.COUPANG_SEARCH_COUNT}
         }), callback=self.parse_products)
 
     def parse_products(self, response):

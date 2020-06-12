@@ -78,8 +78,8 @@ class CoupangDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-        print(request, '##' * 10)
-        print(request.headers)
+        # print(request, '##' * 10)
+        # print(request.headers)
         return None
 
     def process_response(self, request, response, spider):
@@ -89,8 +89,8 @@ class CoupangDownloaderMiddleware:
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
-        print(request, '**' * 10)
-        print(request.headers)
+        # print(request, '**' * 10)
+        # print(request.headers)
         return response
 
     def process_exception(self, request, exception, spider):
