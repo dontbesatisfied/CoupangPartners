@@ -9,7 +9,8 @@ from os import path, getcwd
 
 
 def merge_images(folder_dir, image_name):
-    files = sorted(glob(folder_dir + '/{image_name}'), key=path.getmtime)
+    files = sorted(glob(folder_dir + f'/{image_name}'), key=path.getmtime)
+
     resized_xy = []
     resized_list = []
     max_y = 0
@@ -31,7 +32,7 @@ def merge_images(folder_dir, image_name):
         cursor_y += resized_xy[i][1]
         merged_image.paste(resized_list[i], area)
 
-    saved_path = getcwd()+'/images/total.png'
+    saved_path = f'{folder_dir}/total.png'
     merged_image.save(saved_path)
 
     return saved_path

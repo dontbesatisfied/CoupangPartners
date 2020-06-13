@@ -63,18 +63,17 @@ class CoupangSpider(Spider):
         contents = parse_detail_content(detail_items)
         os.makedirs(
             f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}', exist_ok=True)
+
         # 이미지 요청 및 다운로드
-        # urlretrieve(
-        #     response.meta['image'], f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}')
+        urlretrieve(
+            response.meta['image'], f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}/image.png')
         # 컨텐츠 이미지 요청 및 다운로드
-        # for (idx, content_image) in enumerate(contents):
-        #     print(
-        #         content_image, f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}/content_{idx}.png')
-        #     urlretrieve(
-        #         content_image, f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}/content_{idx}.png')
-        # # 다운받은 이미지 전부 하나의 사진으로 병합
-        # merge_images(constants.COUPANG_RESULT_DIR +
-        #              f'/{response.meta["productId"]}', "content_*.*")
+        for (idx, content_image) in enumerate(contents):
+            urlretrieve(
+                content_image, f'{constants.COUPANG_RESULT_DIR}/{response.meta["productId"]}/content_{idx}.png')
+        # 다운받은 이미지 전부 하나의 사진으로 병합
+        merge_images(constants.COUPANG_RESULT_DIR +
+                     f'/{response.meta["productId"]}', "content_*.*")
 
         item = CoupangItem()
         item['productId'] = response.meta['productId']
