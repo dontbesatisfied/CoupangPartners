@@ -36,10 +36,3 @@ def start():
 
     process.crawl(CoupangSpider)
     process.start()
-
-
-# result = read_file('result.txt')
-# post(result[0])
-
-# pool = Pool(1) #os.cpu_count()
-# pool.map(post, result)
